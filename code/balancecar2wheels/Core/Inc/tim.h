@@ -46,7 +46,8 @@ void MX_TIM4_Init(void);
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN Prototypes */
-
+void my_delay_ms(uint32_t period);
+void my_get_ms(unsigned long *timestamp);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

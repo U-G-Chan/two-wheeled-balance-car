@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -96,16 +96,36 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	motor_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	HAL_GPIO_WritePin(MOTOR_STBY_GPIO_Port,MOTOR_STBY_Pin,GPIO_PIN_SET);//使能电机驱动
+	//A轮（右）正转
+//	HAL_GPIO_WritePin(MOTOR_AIN1_GPIO_Port,MOTOR_AIN1_Pin,GPIO_PIN_SET);                                                  
+//	HAL_GPIO_WritePin(MOTOR_AIN2_GPIO_Port,MOTOR_AIN2_Pin,GPIO_PIN_RESET);
+//	Set_PWM_Duty_Cycle(&htim1,TIM_CHANNEL_1,2160);
+	
+		//B轮（左）正转
+//	HAL_GPIO_WritePin(MOTOR_BIN1_GPIO_Port,MOTOR_BIN1_Pin,GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(MOTOR_BIN2_GPIO_Port,MOTOR_BIN2_Pin,GPIO_PIN_RESET);
+//	Set_PWM_Duty_Cycle(&htim2,TIM_CHANNEL_2,2160);
+	int raw_pwm = -6400;
   while (1)
   {
     /* USER CODE END WHILE */
-
+		motor_set_pwm(MOTOR_B,raw_pwm);
+		HAL_Delay(2000);
+		motor_stop();
+		HAL_Delay(1000);
+		raw_pwm += 2000;
+		if(raw_pwm >= 7000){
+			break;
+		}
+		
     /* USER CODE BEGIN 3 */
+		
   }
   /* USER CODE END 3 */
 }
