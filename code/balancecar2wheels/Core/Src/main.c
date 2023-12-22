@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "motor.h"
+#include "motor_encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,36 +96,32 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+	HAL_TIM_Base_Start_IT(&htim1);
+	HAL_TIM_Base_Start_IT(&htim2);
+	HAL_TIM_Base_Start_IT(&htim3);
+	HAL_TIM_Base_Start_IT(&htim4);
 	motor_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	HAL_GPIO_WritePin(MOTOR_STBY_GPIO_Port,MOTOR_STBY_Pin,GPIO_PIN_SET);//使能电机驱动
-	//A轮（右）正转
-//	HAL_GPIO_WritePin(MOTOR_AIN1_GPIO_Port,MOTOR_AIN1_Pin,GPIO_PIN_SET);                                                  
-//	HAL_GPIO_WritePin(MOTOR_AIN2_GPIO_Port,MOTOR_AIN2_Pin,GPIO_PIN_RESET);
-//	Set_PWM_Duty_Cycle(&htim1,TIM_CHANNEL_1,2160);
-	
-		//B轮（左）正转
-//	HAL_GPIO_WritePin(MOTOR_BIN1_GPIO_Port,MOTOR_BIN1_Pin,GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(MOTOR_BIN2_GPIO_Port,MOTOR_BIN2_Pin,GPIO_PIN_RESET);
-//	Set_PWM_Duty_Cycle(&htim2,TIM_CHANNEL_2,2160);
 	int raw_pwm = -6400;
+	message("[MAIN]start!\r\n");
   while (1)
   {
     /* USER CODE END WHILE */
-		motor_set_pwm(MOTOR_B,raw_pwm);
+
+    /* USER CODE BEGIN 3 */
+		motor_set_pwm(MOTOR_A,raw_pwm);
 		HAL_Delay(2000);
 		motor_stop();
 		HAL_Delay(1000);
-		raw_pwm += 2000;
-		if(raw_pwm >= 7000){
+		raw_pwm += 1000;
+		if(raw_pwm >= 6800){
 			break;
 		}
-		
-    /* USER CODE BEGIN 3 */
 		
   }
   /* USER CODE END 3 */
@@ -169,7 +166,15 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  if (htim->Instance == TIM1) {
+		int Encoder_TIM = motor_encoder_read(MOTOR_A);
+		int controlPWM = Velocity_FeedbackControl(5000,Encoder_TIM);
+		motor_set_pwm(MOTOR_A, controlPWM);
+		message("after 10ms timestamp=%d,Encoder=%d\r\n",HAL_GetTick(),Encoder_TIM);
+    //TODO：调用Read_Encoder()获取编码器数值   (ARR = 7199 PSC=99 10ms调用一次
+  }
+}
 /* USER CODE END 4 */
 
 /**

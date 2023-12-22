@@ -12,5 +12,6 @@ uint8_t motor_init(void);
 
 void motor_set_pwm(uint8_t motor_label, int raw_pwm);
 void motor_stop();
+int Velocity_FeedbackControl(int TargetVelocity, int CurrentVelocity);
 
 #endif
