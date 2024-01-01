@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\MOD\MPU6050</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\MOD\MPU6050;..\MOD\MOTOR</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -395,11 +395,6 @@
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
-              <FileName>control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\control.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/main.c</FilePath>
@@ -437,17 +432,102 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/User/HARDWARE</GroupName>
+          <GroupName>Application/MOD/MOTOR</GroupName>
           <Files>
             <File>
-              <FileName>motor_encoder.c</FileName>
+              <FileName>control.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\motor_encoder.c</FilePath>
+              <FilePath>..\MOD\MOTOR\control.c</FilePath>
+            </File>
+            <File>
+              <FileName>control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MOTOR\control.h</FilePath>
             </File>
             <File>
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\motor.c</FilePath>
+              <FilePath>..\MOD\MOTOR\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MOTOR\motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_encoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\MOTOR\motor_encoder.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_encoder.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MOTOR\motor_encoder.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/MOD/MPU6050</GroupName>
+          <Files>
+            <File>
+              <FileName>dmpKey.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\dmpKey.h</FilePath>
+            </File>
+            <File>
+              <FileName>dmpmap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\dmpmap.h</FilePath>
+            </File>
+            <File>
+              <FileName>IIC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\MPU6050\IIC.c</FilePath>
+            </File>
+            <File>
+              <FileName>IIC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\IIC.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\MPU6050\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\inv_mpu.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\MPU6050\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\inv_mpu_dmp_motion_driver.h</FilePath>
+            </File>
+            <File>
+              <FileName>mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\MPU6050\mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\mpu6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>car_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\MPU6050\car_mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>car_mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\MPU6050\car_mpu6050.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -538,61 +618,6 @@
               <FileName>system_stm32f1xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/system_stm32f1xx.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/MOD/MPU6050</GroupName>
-          <Files>
-            <File>
-              <FileName>dmpKey.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MOD\MPU6050\dmpKey.h</FilePath>
-            </File>
-            <File>
-              <FileName>dmpmap.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MOD\MPU6050\dmpmap.h</FilePath>
-            </File>
-            <File>
-              <FileName>IIC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MOD\MPU6050\IIC.c</FilePath>
-            </File>
-            <File>
-              <FileName>IIC.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MOD\MPU6050\IIC.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MOD\MPU6050\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MOD\MPU6050\inv_mpu.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MOD\MPU6050\inv_mpu_dmp_motion_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MOD\MPU6050\inv_mpu_dmp_motion_driver.h</FilePath>
-            </File>
-            <File>
-              <FileName>mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MOD\MPU6050\mpu6050.c</FilePath>
-            </File>
-            <File>
-              <FileName>mpu6050.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MOD\MPU6050\mpu6050.h</FilePath>
             </File>
           </Files>
         </Group>

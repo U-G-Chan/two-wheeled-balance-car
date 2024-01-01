@@ -28,9 +28,8 @@
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include "IIC.h"
-#include "mpu6050.h"
-#include "inv_mpu.h"
-#include "inv_mpu_dmp_motion_driver.h"
+
+#include "car_mpu6050.h"
 
 #include "motor.h"
 #include "motor_encoder.h"
@@ -58,11 +57,7 @@ uint8_t MPU6050_Update_Flag;
 int MOTOR_ENCODER_A,MOTOR_ENCODER_B;
 int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
 
-float pitch,roll,yaw; 		    //欧拉角
-short aacx,aacy,aacz;					//加速度传感器原始数据
-short gyrox,gyroy,gyroz;			//陀螺仪原始数据
-float temp;					    			//温度
-
+uint8_t mpu_init_flag = -1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -117,28 +112,29 @@ int main(void)
 	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1 | TIM_CHANNEL_2); 
 	HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_1 | TIM_CHANNEL_2);
 
-
-	message("start.\r\n");
-	//motor_init();
-	MPU_Init();			//MPU6050初始化
-  mpu_dmp_init();		//dmp初始化
-	message("Initial OK\r\n");
+	motor_init();
+	mpu_init_flag = mpu6050_init();
+	if(mpu_init_flag == 0){
+		printf("mpu init success.\r\n");
+	}else{
+		printf("mpu init fail.\r\n");
+	}
+	
+	float forward_angle = -1;
+	short forward_gyr = -1;
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	int raw_pwm = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		control_balance();
 		HAL_Delay(5);
-		while(mpu_dmp_get_data(&pitch, &roll, &yaw));	//必须要用while等待，才能读取成功
-		MPU_Get_Accelerometer(&aacx,&aacy, &aacz);		//得到加速度传感器数据
-		MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);		//得到陀螺仪数据
-		temp=MPU_Get_Temperature();										//得到温度信息
-		message("X:%.1f  Y:%.1f  Z:%.1f  temp:%.2f\r\n",roll,pitch,yaw,temp/100);//串口1输出采集信息
+		
   }
   /* USER CODE END 3 */
 }
@@ -182,11 +178,16 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-//  if (htim->Instance == TIM1) {
-//		
-//  }      
-//}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  if (htim->Instance == TIM1) {
+		if(mpu_init_flag == HAL_OK){
+			mpu6050_update_angle();
+			mpu6050_update_acc();
+			mpu6050_update_gyr();
+		//mpu6050_show_angle();
+		}
+  }      
+}
 
 //void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 //  if (GPIO_Pin == GPIO_PIN_15) {
