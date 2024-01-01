@@ -36,8 +36,8 @@
 //#include "msp430_clock.h"
 #define delay_ms    my_delay_ms
 #define get_ms      my_get_ms 
-#define log_e    message
-#define log_i    message
+#define log_e(...)    do{}while(0)
+#define log_i(...)    do{}while(0)
 //========================ÓÃ»§Ìí¼Ó======================================
 #elif defined EMPL_TARGET_MSP430
 #include "msp430.h"
@@ -1332,7 +1332,7 @@ int dmp_read_fifo(short *gyro, short *accel, long *quat,
     if (dmp.feature_mask & (DMP_FEATURE_TAP | DMP_FEATURE_ANDROID_ORIENT))
         decode_gesture(fifo_data + ii);
 
-    myget_ms(timestamp);
+    get_ms(timestamp);
     return 0;
 }
 

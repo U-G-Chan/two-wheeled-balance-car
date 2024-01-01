@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2023 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -41,7 +41,7 @@ void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 1500000;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -193,15 +193,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX
     */
-    GPIO_InitStruct.Pin = WIFI_USART_TX_Pin;
+    GPIO_InitStruct.Pin = WIFI_USART3_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(WIFI_USART_TX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(WIFI_USART3_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = WIFI_USART_RX_Pin;
+    GPIO_InitStruct.Pin = WIFI_USART3_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(WIFI_USART_RX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(WIFI_USART3_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART3 interrupt Init */
     HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
@@ -267,7 +267,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX
     */
-    HAL_GPIO_DeInit(GPIOB, WIFI_USART_TX_Pin|WIFI_USART_RX_Pin);
+    HAL_GPIO_DeInit(GPIOB, WIFI_USART3_TX_Pin|WIFI_USART3_RX_Pin);
 
     /* USART3 interrupt Deinit */
     HAL_NVIC_DisableIRQ(USART3_IRQn);

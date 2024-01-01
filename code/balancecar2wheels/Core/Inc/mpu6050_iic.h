@@ -5,7 +5,7 @@
 
 #define MPU6050_IIC_MAX_DELAY 1000
 
-#define MPU6050_SLAVE_ADDRESS  (0x68<<1)      //MPU6050器件读地址
+#define MPU6050_SLAVE_ADDRESS  0xD0 //(0x68<<1)      //MPU6050器件读地址  0x68(0110 1000)  0xD0(1101 0000)
 
 uint8_t mpu6050_iic_write(uint8_t reg, uint8_t* pData, uint16_t size);
 uint8_t mpu6050_iic_read(uint8_t reg, uint8_t* pBuf, uint16_t size);

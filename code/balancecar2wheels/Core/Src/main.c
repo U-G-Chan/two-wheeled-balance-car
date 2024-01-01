@@ -28,6 +28,8 @@
 /* USER CODE BEGIN Includes */
 #include "motor.h"
 #include "motor_encoder.h"
+#include "mpu6050.h"
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +49,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t MPU6050_Update_Flag;
+int MOTOR_ENCODER_A,MOTOR_ENCODER_B;
+int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,7 +72,6 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -91,37 +94,40 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_TIM1_Init();
-  MX_TIM2_Init();
-  MX_TIM4_Init();
+//  MX_TIM2_Init();
+//  MX_TIM4_Init();
   MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
-  MX_TIM3_Init();
+//  MX_USART2_UART_Init();
+//  MX_USART3_UART_Init();
+//  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim1);
-	HAL_TIM_Base_Start_IT(&htim2);
-	HAL_TIM_Base_Start_IT(&htim3);
-	HAL_TIM_Base_Start_IT(&htim4);
-	motor_init();
+//	HAL_TIM_Base_Start_IT(&htim2);
+//	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1 | TIM_CHANNEL_2); 
+//	HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_1 | TIM_CHANNEL_2);
+	
+	int ret = 0;
+	//motor_init();
+	ret = mpu6050_init();
+	message("mpu6050_init,ret=%d\r\n",ret);
+	ret = mpu6050_dmp_init();
+	message("mpu6050_dmp_init,ret=%d\r\n",ret);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	int raw_pwm = -6400;
-	message("[MAIN]start!\r\n");
+	int raw_pwm = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		motor_set_pwm(MOTOR_A,raw_pwm);
-		HAL_Delay(2000);
-		motor_stop();
-		HAL_Delay(1000);
-		raw_pwm += 1000;
-		if(raw_pwm >= 6800){
-			break;
-		}
+		mpu6050_get_angle();
+		mpu6050_show_attitude();
+//		raw_pwm = -(int)Angle_Balance*100+Gyro_Balance*0.4;
+//		motor_set_pwm(MOTOR_A,raw_pwm);
+//		motor_set_pwm(MOTOR_B,raw_pwm);
+		HAL_Delay(5);
 		
   }
   /* USER CODE END 3 */
@@ -166,15 +172,18 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  if (htim->Instance == TIM1) {
-		int Encoder_TIM = motor_encoder_read(MOTOR_A);
-		int controlPWM = Velocity_FeedbackControl(5000,Encoder_TIM);
-		motor_set_pwm(MOTOR_A, controlPWM);
-		message("after 10ms timestamp=%d,Encoder=%d\r\n",HAL_GetTick(),Encoder_TIM);
-    //TODO：调用Read_Encoder()获取编码器数值   (ARR = 7199 PSC=99 10ms调用一次
-  }
-}
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+//  if (htim->Instance == TIM1) {
+//		
+//  }      
+//}
+
+//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+//  if (GPIO_Pin == GPIO_PIN_15) {
+//		
+//  }
+//}
+
 /* USER CODE END 4 */
 
 /**

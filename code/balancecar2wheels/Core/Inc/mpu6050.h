@@ -3,7 +3,7 @@
 #include "stm32f1xx_hal.h"
 
 //模块的A0引脚接GND，IIC的7位地址为0x68，若接到VCC，需要改为0x69
-#define MPU6050_SLAVE_ADDRESS  (0x68<<1)      //MPU6050器件读地址
+#define MPU6050_SLAVE_ADDRESS  0xD0 //(0x68<<1)      //MPU6050器件读地址
 
 
 #define MPU6050_WHO_AM_I        0x75
@@ -382,20 +382,27 @@
 #define q30  1073741824.0f
 
 
+//extern int ENCODER_A,ENCODER_B;
+
+
+
 //========================================================
-void mpu6050_setClockSource(uint8_t source);
-void mpu6050_setFullScaleGyroRange(uint8_t range);
-void mpu6050_setFullScaleAccelRange(uint8_t range);
-void mpu6050_setSleepEnabled(uint8_t enabled);
+uint8_t mpu6050_setClockSource(uint8_t source);
+uint8_t mpu6050_setFullScaleGyroRange(uint8_t range);
+uint8_t mpu6050_setFullScaleAccelRange(uint8_t range);
+uint8_t mpu6050_setSleepEnabled(uint8_t enabled);
 uint8_t mpu6050_ReadID(void);
 uint8_t mpu6050_testConnection(void);
-void mpu6050_setI2CMasterModeEnabled(uint8_t enabled);
-void mpu6050_setI2CBypassEnabled(uint8_t enabled);
-void mpu6050_init(void);
+uint8_t mpu6050_setI2CMasterModeEnabled(uint8_t enabled);
+uint8_t mpu6050_setI2CBypassEnabled(uint8_t enabled);
+uint8_t mpu6050_init(void);
 //=========================================================
 
-void mpu6050_dmp_init();
+uint8_t mpu6050_dmp_init();
 
+void mpu6050_read_dmp(void);
+void mpu6050_show_attitude(void);
+void mpu6050_get_angle(void);
 
 void MPU6050ReadTemp(uint16_t *tempData);
 void MPU6050ReadGyro(uint16_t *gyroData);

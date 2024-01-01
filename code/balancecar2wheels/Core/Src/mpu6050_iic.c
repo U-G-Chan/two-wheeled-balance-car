@@ -39,10 +39,11 @@ uint8_t mpu6050_iic_write_bit(uint8_t reg, uint8_t bit_num, uint8_t data){
    return mpu6050_iic_write_byte(reg, &byte);
 }
 
+//仅在inv_mpu.c使用  注意addr<<1
 int my_i2c_write(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data){
- return HAL_I2C_Mem_Write(&hi2c1, addr, reg, I2C_MEMADD_SIZE_8BIT, data, len, MPU6050_IIC_MAX_DELAY);
+ return HAL_I2C_Mem_Write(&hi2c1, addr<<1, reg, I2C_MEMADD_SIZE_8BIT, data, len, MPU6050_IIC_MAX_DELAY);
 } 
-
+//仅在inv_mpu.c使用  注意addr<<1
 int my_i2c_read(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *buf){
-	 return  HAL_I2C_Mem_Read(&hi2c1, addr, reg, I2C_MEMADD_SIZE_8BIT, buf, len, MPU6050_IIC_MAX_DELAY);
+	 return  HAL_I2C_Mem_Read(&hi2c1, addr<<1, reg, I2C_MEMADD_SIZE_8BIT, buf, len, MPU6050_IIC_MAX_DELAY);
 }

@@ -49,11 +49,11 @@
 
 #define i2c_write   my_i2c_write
 #define i2c_read    my_i2c_read
-#define delay_ms    my_delay_ms
-#define get_ms      my_get_ms
+#define delay_ms    HAL_Delay
+#define get_ms      myget_ms
 
-#define log_e    message
-#define log_i    message
+#define log_e(...)    do{}while(0)
+#define log_i(...)    do{}while(0)
 
 //========================ÓÃ»§Ìí¼Ó======================================
 
