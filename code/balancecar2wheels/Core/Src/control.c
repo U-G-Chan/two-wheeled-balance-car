@@ -63,29 +63,30 @@ int control_balance_pwm_velocity(int encoder_left,int encoder_right){
 } 
 
 uint8_t control_state_test(){
-	if(Angle_Balance<-40||Angle_Balance>40){//倾角大于40度关闭电机
-				motor_stop();
-				return HAL_ERROR;
-	}else{
-		return HAL_OK;
-	}
+//	if(Angle_Balance<-40||Angle_Balance>40){//倾角大于40度关闭电机
+//				motor_stop();
+//				return HAL_ERROR;
+//	}else{
+//		return HAL_OK;
+//	}
+	return 0;
 }
 
 uint8_t control_balance(){
 	
 	//MOTOR_ENCODER_B = motor_encoder_read(MOTOR_B);
-	mpu6050_get_angle();
+	//mpu6050_get_angle();
 	if(control_state_test() == HAL_OK){
-		ANGLE_PWM  = control_balance_pwm_angle(Angle_Balance,Gyro_Balance);
+		//ANGLE_PWM  = control_balance_pwm_angle(Angle_Balance,Gyro_Balance);
 		//VELOCITY_PWM = Velocity_FeedbackControl(0, MOTOR_ENCODER_A);
 		//VELOCITY_PWM = control_balance_pwm_velocity(0,MOTOR_ENCODER_A);
-		BALANCE_PWM =  ANGLE_PWM+VELOCITY_PWM;
+		//BALANCE_PWM =  ANGLE_PWM+VELOCITY_PWM;
 		//message("Angle_Balance=%f,Gyro_Balance=%f,BALANCE_PWM=%d\r\n",Angle_Balance,Gyro_Balance,BALANCE_PWM);
 		//message("Angle_Balance[%f],Gyro_Balance[%f],ANGLE_PWM[%d]\r\n",Angle_Balance,Gyro_Balance,ANGLE_PWM);
 		//message("MOTOR_ENCODER_A[%d],VELOCITY_PWM[%d]\r\n",MOTOR_ENCODER_A,VELOCITY_PWM);
 //		message("BALANCE_PWM[]")
-		motor_set_pwm(MOTOR_A,BALANCE_PWM);
-		motor_set_pwm(MOTOR_B,BALANCE_PWM);
+	//	motor_set_pwm(MOTOR_A,BALANCE_PWM);
+	//	motor_set_pwm(MOTOR_B,BALANCE_PWM);
 		return HAL_OK;
 	}else{
 		return HAL_ERROR;

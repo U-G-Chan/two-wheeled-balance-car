@@ -26,9 +26,14 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
+#include "IIC.h"
+#include "mpu6050.h"
+#include "inv_mpu.h"
+#include "inv_mpu_dmp_motion_driver.h"
+
 #include "motor.h"
 #include "motor_encoder.h"
-#include "mpu6050.h"
 #include "control.h"
 /* USER CODE END Includes */
 
@@ -52,6 +57,12 @@
 uint8_t MPU6050_Update_Flag;
 int MOTOR_ENCODER_A,MOTOR_ENCODER_B;
 int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
+
+float pitch,roll,yaw; 		    //欧拉角
+short aacx,aacy,aacz;					//加速度传感器原始数据
+short gyrox,gyroy,gyroz;			//陀螺仪原始数据
+float temp;					    			//温度
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,24 +105,24 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_TIM1_Init();
-//  MX_TIM2_Init();
-//  MX_TIM4_Init();
+  MX_TIM2_Init();
+  MX_TIM4_Init();
   MX_USART1_UART_Init();
-//  MX_USART2_UART_Init();
-//  MX_USART3_UART_Init();
-//  MX_TIM3_Init();
+  MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim1);
-//	HAL_TIM_Base_Start_IT(&htim2);
-//	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1 | TIM_CHANNEL_2); 
-//	HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_1 | TIM_CHANNEL_2);
-	
-	int ret = 0;
+	HAL_TIM_Base_Start_IT(&htim2);
+	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1 | TIM_CHANNEL_2); 
+	HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_1 | TIM_CHANNEL_2);
+
+
+	message("start.\r\n");
 	//motor_init();
-	ret = mpu6050_init();
-	message("mpu6050_init,ret=%d\r\n",ret);
-	ret = mpu6050_dmp_init();
-	message("mpu6050_dmp_init,ret=%d\r\n",ret);
+	MPU_Init();			//MPU6050初始化
+  mpu_dmp_init();		//dmp初始化
+	message("Initial OK\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,13 +133,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		mpu6050_get_angle();
-		mpu6050_show_attitude();
-//		raw_pwm = -(int)Angle_Balance*100+Gyro_Balance*0.4;
-//		motor_set_pwm(MOTOR_A,raw_pwm);
-//		motor_set_pwm(MOTOR_B,raw_pwm);
 		HAL_Delay(5);
-		
+		while(mpu_dmp_get_data(&pitch, &roll, &yaw));	//必须要用while等待，才能读取成功
+		MPU_Get_Accelerometer(&aacx,&aacy, &aacz);		//得到加速度传感器数据
+		MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);		//得到陀螺仪数据
+		temp=MPU_Get_Temperature();										//得到温度信息
+		message("X:%.1f  Y:%.1f  Z:%.1f  temp:%.2f\r\n",roll,pitch,yaw,temp/100);//串口1输出采集信息
   }
   /* USER CODE END 3 */
 }
