@@ -3,4 +3,14 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="button_mode1_text">控制模式</string>
+    <string name="button_mode2_text">自由模式</string>
+    <string name="button_mode3_text">循迹模式</string>
+    <string name="button_up_text">↑</string>
+    <string name="button_down_text">↓</string>
+    <string name="button_left_text">←</string>
+    <string name="button_right_text">→</string>
+    <string name="button_clear_text">清空信息</string>
+    <string name="switch_message_flag_text">输出信息</string>
 </resources>
+

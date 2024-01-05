@@ -1,5 +1,6 @@
 package top.cherryjerry.phoneapp.ui.home;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,13 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,6 +36,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private BluetoothAdapter bluetoothAdapter;
+
     private final ActivityResultLauncher<Intent> enableBtResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -48,6 +51,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // 初始化权限请求的回调
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
@@ -84,19 +88,54 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        Button scanButton = root.findViewById(R.id.button);
-        scanButton.setOnClickListener(v -> {
-            if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-                scanBluetoothDevices();
-            } else {
-                Toast.makeText(getContext(), "Please enable Bluetooth", Toast.LENGTH_SHORT).show();
-            }
-        });
+        final TextView output_terminal = root.findViewById(R.id.output_terminal);
+        homeViewModel.getText().observe(getViewLifecycleOwner(),output_terminal::setText);
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        ScrollView scrollView = root.findViewById(R.id.scrollView);
+        homeViewModel.setScrollView(scrollView);
+
+        //监听模式按键
+        final Button button_mode1 = root.findViewById(R.id.button_mode1);
+        final Button button_mode2 = root.findViewById(R.id.button_mode2);
+        final Button button_mode3 = root.findViewById(R.id.button_mode3);
+        button_mode1.setOnClickListener(view -> homeViewModel.useMode1());
+        button_mode2.setOnClickListener(view -> homeViewModel.useMode2());
+        button_mode3.setOnClickListener(view -> homeViewModel.useMode3());
+        //监听方向按键
+        final Button button_up = root.findViewById(R.id.button_up);
+        final Button button_down = root.findViewById(R.id.button_down);
+        final Button button_left = root.findViewById(R.id.button_left);
+        final Button button_right = root.findViewById(R.id.button_right);
+        button_up.setOnClickListener(view -> homeViewModel.keyUP());
+        button_down.setOnClickListener(view -> homeViewModel.keyDown());
+        button_left.setOnClickListener(view -> homeViewModel.keyLeft());
+        button_right.setOnClickListener(view -> homeViewModel.keyRight());
+        //监听信息输出控制键
+        final Button button_clear = root.findViewById(R.id.button_clear);
+        button_clear.setOnClickListener(view -> homeViewModel.cleanMessage());
+        @SuppressLint("UseSwitchCompatOrMaterialCode") final Switch switch_message_flag
+                = root.findViewById(R.id.switch_message_flag);
+        switch_message_flag.setOnCheckedChangeListener((view, checked) ->
+                homeViewModel.toggleEnableMessageFlag());
+
+
+/*
+        homeViewModel.getStepLiveData().observe(getViewLifecycleOwner(),
+                newStep -> output_terminal.setText(String.valueOf(newStep)));
+*/
+
         return root;
     }
+
+
+/*    Button scanButton = root.findViewById(R.id.button_mode1);
+        scanButton.setOnClickListener(v -> {
+        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+            scanBluetoothDevices();
+        } else {
+            Toast.makeText(getContext(), "Please enable Bluetooth", Toast.LENGTH_SHORT).show();
+        }
+    });*/
 
     @Override
     public void onDestroyView() {
