@@ -35,6 +35,8 @@ void mpu6050_show_angle(){
 }
 
 void mpu6050_get_balnace_feedback(float *forward_angle, short *forward_gyr){
+	mpu_dmp_get_data(&pitch, &roll, &yaw);
+	MPU_Get_Gyroscope(&gyrox,&gyrox,&gyrox);
 	*forward_angle = roll;
 	*forward_gyr   = gyrox;
 }

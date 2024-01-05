@@ -132,8 +132,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		control_balance();
-		HAL_Delay(5);
+		
+		HAL_Delay(100);
 		
   }
   /* USER CODE END 3 */
@@ -181,10 +181,8 @@ void SystemClock_Config(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM1) {
 		if(mpu_init_flag == HAL_OK){
-			mpu6050_update_angle();
-			mpu6050_update_acc();
-			mpu6050_update_gyr();
-		//mpu6050_show_angle();
+			
+			control_pwm();
 		}
   }      
 }

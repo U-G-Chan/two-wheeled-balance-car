@@ -2,18 +2,27 @@
 #include "motor.h"
 #include "tim.h"
 
-int motor_encoder_read(uint8_t motor_label){
-	int Encoder_TIM = 0;
+static int MOTOR_ENCODER_A,MOTOR_ENCODER_B;
+
+uint8_t motor_encoder_update(uint8_t motor_label){
 	if(motor_label == MOTOR_A){
-		Encoder_TIM =  __HAL_TIM_GET_COUNTER(&htim3);
-		__HAL_TIM_SET_COUNTER(&htim3,0);		
+		MOTOR_ENCODER_A =  (short)__HAL_TIM_GET_COUNTER(&htim3);
+		__HAL_TIM_SET_COUNTER(&htim3,0);
+		return HAL_OK;	
+		
 	}
 	if(motor_label == MOTOR_B){
-		Encoder_TIM =  __HAL_TIM_GET_COUNTER(&htim4);
-		__HAL_TIM_SET_COUNTER(&htim4,0);	
+		MOTOR_ENCODER_B = (short) __HAL_TIM_GET_COUNTER(&htim4);
+		__HAL_TIM_SET_COUNTER(&htim4,0);
+		return HAL_OK;		
 	}
-	if(Encoder_TIM > 0xefff){
-		Encoder_TIM=Encoder_TIM-0xffff;           //转化计数值为有方向的值，大于0正转，小于0反转。
-	}
-	return Encoder_TIM;
-}     
+	return HAL_ERROR;
+}
+
+void motor_encoder_read(int *encoder_left,int *encoder_right){
+	*encoder_right =  (short)__HAL_TIM_GET_COUNTER(&htim3);
+	__HAL_TIM_SET_COUNTER(&htim3,0);
+	
+	*encoder_left = -(short) __HAL_TIM_GET_COUNTER(&htim4);
+	__HAL_TIM_SET_COUNTER(&htim4,0);
+}

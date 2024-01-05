@@ -3,15 +3,16 @@
 
 #include "stm32f1xx_hal.h"
 
-extern float Angle_Balance,Gyro_Balance;
 
+int control_pwm_balance(float Angle, float Gyro);
 
-int Velocity_FeedbackControl(int TargetVelocity, int CurrentVelocity);
-int Angle_FeedbackControl(float Angle, float Gyro);
+int control_pwm_velocity(int encoder_left,int encoder_right);
 
-int control_balance_pwm_angle(float Angle, float Gyro);
-int control_balance_pwm_velocity(int encoder_left,int encoder_right);
+int control_pwm_turn(int encoder_left,int encoder_right,float gyro);
 
-uint8_t control_balance();
+uint8_t control_state_test(float angle);
+
+uint8_t control_pwm(); 
+
 #endif
 

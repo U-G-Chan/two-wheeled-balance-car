@@ -3,6 +3,10 @@
 
 #include "stm32f1xx_hal.h"
 
-int motor_encoder_read(uint8_t motor_label);
+uint8_t motor_encoder_update(uint8_t motor_label);
+
+void motor_encoder_read(int *encoder_left,int *encoder_right);
+
+
 
 #endif

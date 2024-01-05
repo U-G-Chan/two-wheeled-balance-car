@@ -4,95 +4,134 @@
 #include "motor.h"
 #include "motor_encoder.h"
 #include "usart.h"
+#include <stdlib.h>
 
-#define ZHONGZHI 0
-extern float Angle_Balance,Gyro_Balance;           //平衡倾角 平衡陀螺仪 转向陀螺仪
+#define ZERO -1  //平衡角度，根据实际情况调整
+#define ENCODER_INTEGRAL_LIMIT 1000
 
-int BALANCE_PWM, VELOCITY_PWM,ANGLE_PWM;
-float Velcity_Kp=20,  Velcity_Ki=5,  Velcity_Kd; //相关速度PID参数
+uint8_t Flag_Qian,Flag_Hou,Flag_Left,Flag_Right,Flag_sudu=1; //蓝牙遥控相关的变量
 
-float Balance_Angle_Kp=100.0,   Balance_Angle_Ki=0,		 Balance_Angle_Kd=0.40;
-float Balance_Velocity_Kp=50.0,Balance_Velocity_Ki=0.25,Balance_Velocity_Kd=0;
+//PID系数
+// balance 110 0 0.5     velocity 20  20 / 200
 
-/**************************************************************************
-函数功能：速度闭环PID控制(实际为PI控制)
-入口参数：目标速度 当前速度
-返回  值：速度控制值
-根据增量式离散PID公式 
-ControlVelocity+=Kp[e（k）-e(k-1)]+Ki*e(k)+Kd[e(k)-2e(k-1)+e(k-2)]
-e(k)代表本次偏差 
-e(k-1)代表上一次的偏差  以此类推 
-ControlVelocity代表增量输出
-在我们的速度控制闭环系统里面，只使用PI控制
-ControlVelocity+=Kp[e（k）-e(k-1)]+Ki*e(k)
-**************************************************************************/
-int Velocity_FeedbackControl(int TargetVelocity, int CurrentVelocity)
-{
-		int Bias;  //定义相关变量
-		static int ControlVelocity, Last_bias; //静态变量，函数调用结束后其值依然存在
-		
-		Bias=TargetVelocity-CurrentVelocity; //求速度偏差
-		
-		ControlVelocity+=Velcity_Kp*(Bias-Last_bias)+Velcity_Ki*Bias;  //增量式PI控制器
-                                                                   //Velcity_Kp*(Bias-Last_bias) 作用为限制加速度
-	                                                                 //Velcity_Ki*Bias             速度控制值由Bias不断积分得到 偏差越大加速度越大
-		Last_bias=Bias;	
-		return ControlVelocity; //返回速度控制值
+// balance 135 0 1.8     velocity 35  35 / 200
+static float Balance_Kp = 90,   Balance_Ki = 0,			 Balance_Kd = 1v                                                   .5;
+static float Velocity_Kp = 20,	 Velocity_Ki = 20/200,   Velocity_Kd = 0;
+static float Turn_Kp = 42,         Turn_Ki = 0,          Turn_Kd = 0;
+
+//速度控制变量
+static float velocity_target = 0;//目标速度
+static float velocity_forward = 1,velocity_backward = 0; 
+
+
+//直立控制PWM
+int control_pwm_balance(float Angle, float Gyro){
+	float Bias=Angle-ZERO;//求出平衡的角度中值 和机械相关
+	int balance= Balance_Kp*Bias+Gyro*Balance_Kd;//计算平衡控制的电机PWM  PD控制   kp是P系数 kd是D系数
+	return -balance;
 }
 
-int control_balance_pwm_angle(float Angle, float Gyro){
-	float Bias=Angle-ZHONGZHI;//求出平衡的角度中值 和机械相关
-	int balance= Balance_Angle_Kp*Bias+Gyro*Balance_Angle_Kd;//计算平衡控制的电机PWM  PD控制   kp是P系数 kd是D系数 
-	return balance;
-}
 
-int control_balance_pwm_velocity(int encoder_left,int encoder_right){
-	static float Velocity,Encoder_Least,Encoder,Movement;
-	static float Encoder_Integral;
+static float Velocity,Encoder_Least,Encoder,Movement = 0;
+static float Encoder_Integral;
+//速度控制PWM
+int control_pwm_velocity(int encoder_left,int encoder_right){
+	//printf("encoder_left=%d,encoder_right=%d\r\n",encoder_left,encoder_right);
+	//Velocity_Ki = Velocity_Kp/200;
+
+	//=============速度大小方向设置====================//
+//	if(velocity_forward == 1){
+//		Movement = velocity_target;
+//	}else if(velocity_backward == 1){
+//		Movement = -velocity_target;
+//	}else{
+//		Movement = 0;
+//	}
 	//=============速度PI控制器=======================//	
-	Encoder_Least =(encoder_left+encoder_right);                    //===获取最新速度偏差==测量速度（左右编码器之和）-目标速度（此处为零） 
-	Encoder *= 0.7;		                                                //===一阶低通滤波器       
-	Encoder += Encoder_Least*0.3;	                                    //===一阶低通滤波器    
-	Encoder_Integral += Encoder;                                       //===积分出位移 积分时间：10ms
-	Encoder_Integral=Encoder_Integral-Movement;                       //===接收遥控器数据，控制前进后退
-	if(Encoder_Integral>15000)  	Encoder_Integral=15000;             //===积分限幅
-	if(Encoder_Integral<-15000) 	Encoder_Integral=-15000;            //===积分限幅	
-	Velocity=Encoder*Balance_Velocity_Kp+Encoder_Integral*Balance_Velocity_Ki;                          //===速度控制	
-	//message("encoder_left=%d  encoder_right=%d\r\n",encoder_left,encoder_right);
-	//message("Encoder=%f  Encoder_Integral=%f\r\n",Encoder,Encoder_Integral);
+	Encoder_Least =(encoder_left+encoder_right) - Movement;             //===获取最新速度偏差==测量速度（左右编码器之和）-目标速度（此处为零） 
+	Encoder *= 0.5;		                                                	//===一阶低通滤波器       
+	Encoder += Encoder_Least*0.5;	                                    	//===一阶低通滤波器    
+	Encoder_Integral += Encoder;                                       	//===积分出位移 积分时间：10ms
+	Encoder_Integral=Encoder_Integral ;                       	//===接收遥控器数据，控制前进后退
+	if(Encoder_Integral >  ENCODER_INTEGRAL_LIMIT)  Encoder_Integral =  ENCODER_INTEGRAL_LIMIT;            	//===积分限幅
+	if(Encoder_Integral < -ENCODER_INTEGRAL_LIMIT) 	Encoder_Integral = -ENCODER_INTEGRAL_LIMIT;            	//===积分限幅	
+	Velocity=Encoder*Velocity_Kp+Encoder_Integral*Velocity_Ki; 				  //===速度控制
+	//printf("Encoder=%f,Encoder_Integral=%f\r\n",Encoder,Encoder_Integral);
 	return Velocity;
-} 
+}
+
+//转向控制PWM
+int control_pwm_turn(int encoder_left,int encoder_right,float gyro)//转向控制
+{
+    static float Turn_Target,Turn,Encoder_temp,Turn_Convert=0.7,Turn_Count;
+	  float Turn_Amplitude=50/Flag_sudu;    
+	  //=============遥控左右旋转部分=======================//
+  	if(1==Flag_Left||1==Flag_Right)                      //这一部分主要是根据旋转前的速度调整速度的起始速度，增加小车的适应性
+		{
+			if(++Turn_Count==1)
+			Encoder_temp=abs(encoder_left+encoder_right);
+			Turn_Convert=50/Encoder_temp;
+			if(Turn_Convert<0.4)Turn_Convert=0.4;
+			if(Turn_Convert>1)Turn_Convert=1;
+		}	
+	  else
+		{
+			Turn_Convert=0.7;
+			Turn_Count=0;
+			Encoder_temp=0;
+		}		
+		if(1==Flag_Left)	           Turn_Target-=Turn_Convert;        //===接收转向遥控数据
+		else if(1==Flag_Right)	     Turn_Target+=Turn_Convert;        //===接收转向遥控数据
+		else Turn_Target=0;                                            //===接收转向遥控数据
+    if(Turn_Target>Turn_Amplitude)  Turn_Target=Turn_Amplitude;    //===转向速度限幅
+	  if(Turn_Target<-Turn_Amplitude) Turn_Target=-Turn_Amplitude;   //===转向速度限幅
+		if(Flag_Qian==1||Flag_Hou==1)  Turn_Kd=0.6;                         //===接收转向遥控数据直立行走的时候增加陀螺仪就纠正    
+		else Turn_Kd=0;                                   
+  	//=============转向PD控制器=======================//
+		Turn=Turn_Target*Turn_Kp+gyro*Turn_Kd;                 //===结合Z轴陀螺仪进行PD控制
+	  return Turn;
+}
+
 
 uint8_t control_state_test(float angle){
-	if(angle<-40||angle>40){//倾角大于40度关闭电机
-				motor_stop();
-				return HAL_ERROR;
+	if(angle<-60||angle>60){//倾角大于80度关闭电机
+		Encoder_Integral = 0;		
+		motor_stop();
+		return HAL_ERROR;
 	}else{
 		return HAL_OK;
 	}
 	return 0;
 }
 
-uint8_t control_balance(){
+//综合pwm控制
+static int COMBINE_PWM,BALANCE_PWM,VELOCITY_PWM,TURN_PWM;
+
+static int MOTOR_ENCODER_A,MOTOR_ENCODER_B;
+static int encoder_left,encoder_right;
+
+static float forward_angle = 0;
+static short forward_gyr = 0;
+
+uint8_t control_pwm(){
+			//motor_encoder_update(MOTOR_A);
+			//motor_encoder_update(MOTOR_B);
+			//mpu6050_update_angle();
+			//mpu6050_update_acc();
+			//mpu6050_update_gyr();
 	
-	//MOTOR_ENCODER_B = motor_encoder_read(MOTOR_B);
-	//mpu6050_get_angle();
-	static float forward_angle = 0;
-	static short forward_gyr = 0;
-	mpu6050_get_balnace_feedback(&forward_angle,&forward_gyr);
+	motor_encoder_read(&encoder_left, &encoder_right);
+	mpu6050_get_balnace_feedback(&forward_angle,&forward_gyr); //读取当前角度
+	
+	
 	if(control_state_test(forward_angle) == HAL_OK){
-		//printf("forward_angle=%.1f,forward_gyr=%d\r\n",forward_angle,forward_gyr);
-		ANGLE_PWM  = control_balance_pwm_angle(forward_angle,(float)forward_gyr);
-		printf("ANGLE_PWM=%d\r\n",ANGLE_PWM);
-		//VELOCITY_PWM = Velocity_FeedbackControl(0, MOTOR_ENCODER_A);
-		//VELOCITY_PWM = control_balance_pwm_velocity(0,MOTOR_ENCODER_A);
-		//BALANCE_PWM =  ANGLE_PWM+VELOCITY_PWM;
-		//message("Angle_Balance=%f,Gyro_Balance=%f,BALANCE_PWM=%d\r\n",Angle_Balance,Gyro_Balance,BALANCE_PWM);
-		//message("Angle_Balance[%f],Gyro_Balance[%f],ANGLE_PWM[%d]\r\n",Angle_Balance,Gyro_Balance,ANGLE_PWM);
-		//message("MOTOR_ENCODER_A[%d],VELOCITY_PWM[%d]\r\n",MOTOR_ENCODER_A,VELOCITY_PWM);
-//		message("BALANCE_PWM[]")
-		motor_set_pwm(MOTOR_A,-ANGLE_PWM);
-		motor_set_pwm(MOTOR_B,-ANGLE_PWM);
+		BALANCE_PWM  = control_pwm_balance(forward_angle,forward_gyr);
+		VELOCITY_PWM = control_pwm_velocity(encoder_left,encoder_right);
+		COMBINE_PWM = BALANCE_PWM + VELOCITY_PWM;
+		//printf("encoder_left=%d,encoder_right=%d\r\n",encoder_left,encoder_right);
+		printf("angle=%.1f,BALANCE_PWM=%d,VELOCITY_PWM=%d\r\n",forward_angle,BALANCE_PWM,VELOCITY_PWM);
+		motor_set_pwm(MOTOR_A,COMBINE_PWM);
+		motor_set_pwm(MOTOR_B,COMBINE_PWM);
 		return HAL_OK;
 	}else{
 		return HAL_ERROR;
