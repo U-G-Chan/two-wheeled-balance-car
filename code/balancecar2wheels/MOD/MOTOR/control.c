@@ -15,7 +15,7 @@ uint8_t Flag_Qian,Flag_Hou,Flag_Left,Flag_Right,Flag_sudu=1; //À¶ÑÀÒ£¿ØÏà¹ØµÄ±äÁ
 // balance 110 0 0.5     velocity 20  20 / 200
 
 // balance 135 0 1.8     velocity 35  35 / 200
-static float Balance_Kp = 90,   Balance_Ki = 0,			 Balance_Kd = 1v                                                   .5;
+static float Balance_Kp = 90,   Balance_Ki = 0,			 Balance_Kd = 1.5;
 static float Velocity_Kp = 20,	 Velocity_Ki = 20/200,   Velocity_Kd = 0;
 static float Turn_Kp = 42,         Turn_Ki = 0,          Turn_Kd = 0;
 
