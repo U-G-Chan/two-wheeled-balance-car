@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
 
-    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
+<!--    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>-->
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <application
@@ -28,10 +28,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".SerialService" />
     </application>
 
 </manifest>

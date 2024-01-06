@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "top.cherryjerry.phoneapp"
-        minSdk = 23
+        minSdk = 18
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -22,6 +22,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,6 +30,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 
 }
 
