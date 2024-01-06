@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel;
 
 public class HomeViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
-    private final StringBuilder stringBuilder;
-    private boolean enableMessageFlag = false;
-    private ScrollView scrollView;
+    private static MutableLiveData<String> mText;
+    private static StringBuilder stringBuilder;
+    public static boolean enableMessageFlag = false;
+    private static ScrollView scrollView;
     private int mode = 0;
     private int key = 0;
 
@@ -28,7 +28,7 @@ public class HomeViewModel extends ViewModel {
         this.scrollView = scrollView;
     }
 
-    public void showMessage(String message) {
+    public static void showMessage(String message) {
         if(enableMessageFlag){
             stringBuilder.append(message);
             mText.setValue(stringBuilder.toString());

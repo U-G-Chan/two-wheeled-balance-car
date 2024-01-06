@@ -183,7 +183,7 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
     }
 
     private void receive(ArrayDeque<byte[]> datas) {
-        SpannableStringBuilder spn = new SpannableStringBuilder();
+        StringBuilder spn = new StringBuilder();
         for (byte[] data : datas) {
             if (hexEnabled) {
                 spn.append(TextUtil.toHexString(data)).append('\n');
@@ -207,7 +207,9 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
                 spn.append(TextUtil.toCaretString(msg, newline.length() != 0));
             }
         }
-        receiveText.append(spn);
+        //receiveText.append(spn);
+        HomeViewModel.showMessage(spn.toString());
+
     }
 
     private void status(String str) {
