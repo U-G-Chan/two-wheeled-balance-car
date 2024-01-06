@@ -16,4 +16,8 @@ public class DashboardViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+    public void btConnectTest(){
+
+    }
 }
