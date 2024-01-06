@@ -5,13 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
@@ -39,6 +37,8 @@ public class DashboardFragment extends Fragment {
                 Objects.requireNonNull(actionBar).
                         setDisplayHomeAsUpEnabled(getChildFragmentManager().getBackStackEntryCount()>0);
         }
+
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -49,7 +49,7 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final Button button_BT_connect = root.findViewById(R.id.button_BT_connect);
+        final Button button_BT_connect = root.findViewById(R.id.button_bt_connect);
         button_BT_connect.setOnClickListener(view -> dashboardViewModel.btConnectTest());
 
         //final TextView textView = binding.textDashboard;

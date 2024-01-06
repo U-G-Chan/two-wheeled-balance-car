@@ -13,9 +13,11 @@
     <string name="button_clear_text">清空信息</string>
     <string name="switch_message_flag_text">输出信息</string>
 
-    <string name="button_bt_connect">连接蓝牙</string>
+    <string name="button_bt_connect">发送测试</string>
+
 
     <string name="devices">Bluetooth Devices</string>
+    <string name="bluetooth_connect">Bluetooth Connect</string>
     <string name="bluetooth_permission_title">Bluetooth permission</string>
     <string name="bluetooth_permission_grant">Bluetooth permission is required by this App. Please grant in next dialog.</string>
     <string name="bluetooth_permission_denied">Bluetooth permission was permanently denied. You have to enable permission \"%s\" in App settings.</string>

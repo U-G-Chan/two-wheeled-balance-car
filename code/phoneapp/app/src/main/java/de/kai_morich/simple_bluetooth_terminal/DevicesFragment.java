@@ -27,6 +27,7 @@ import androidx.fragment.app.ListFragment;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import top.cherryjerry.phoneapp.BluetoothFragment;
 import top.cherryjerry.phoneapp.R;
 
 
@@ -141,9 +142,10 @@ public class DevicesFragment extends ListFragment {
         BluetoothDevice device = listItems.get(position-1);
         Bundle args = new Bundle();
         args.putString("device", device.getAddress());
-        Toast.makeText(getContext(), "列表项被点击，准备打开终端", Toast.LENGTH_SHORT).show();
-        Fragment fragment = new TerminalFragment();
-        //fragment.setArguments(args);
-        //getParentFragmentManager().beginTransaction().replace(R.id.fragment, fragment, "terminal").addToBackStack(null).commit();
+        Fragment fragment = BluetoothFragment.getInstance();
+        fragment.setArguments(args);
+        getParentFragmentManager().beginTransaction().replace(
+                R.id.fragment, fragment, "bluetooth").addToBackStack(null).commit();
+        BluetoothFragment.connected = BluetoothFragment.Connected.True;
     }
 }

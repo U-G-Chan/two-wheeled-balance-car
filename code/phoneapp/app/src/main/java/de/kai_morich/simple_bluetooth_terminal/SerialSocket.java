@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
-class SerialSocket implements Runnable {
+public class SerialSocket implements Runnable {
 
     private static final UUID BLUETOOTH_SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -27,7 +27,7 @@ class SerialSocket implements Runnable {
     private BluetoothSocket socket;
     private boolean connected;
 
-    SerialSocket(Context context, BluetoothDevice device) {
+    public SerialSocket(Context context, BluetoothDevice device) {
         if(context instanceof Activity)
             throw new InvalidParameterException("expected non UI context");
         this.context = context;

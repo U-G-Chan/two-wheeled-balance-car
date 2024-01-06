@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import top.cherryjerry.phoneapp.BluetoothFragment;
+
 public class DashboardViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
@@ -18,6 +20,8 @@ public class DashboardViewModel extends ViewModel {
     }
 
     public void btConnectTest(){
-
+        if (BluetoothFragment.connected == BluetoothFragment.Connected.True) {
+            BluetoothFragment.getInstance().send("hello from APP");
+        }
     }
 }

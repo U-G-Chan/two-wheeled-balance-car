@@ -27,8 +27,8 @@ import top.cherryjerry.phoneapp.R;
  */
 public class SerialService extends Service implements SerialListener {
 
-    class SerialBinder extends Binder {
-        SerialService getService() { return SerialService.this; }
+    public class SerialBinder extends Binder {
+        public SerialService getService() { return SerialService.this; }
     }
 
     private enum QueueType {Connect, ConnectError, Read, IoError}
