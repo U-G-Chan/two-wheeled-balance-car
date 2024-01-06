@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".SerialService" />
+        <service android:name="de.kai_morich.simple_bluetooth_terminal.SerialService" />
     </application>
 
 </manifest>

@@ -117,26 +117,9 @@ public class HomeFragment extends Fragment {
                 = root.findViewById(R.id.switch_message_flag);
         switch_message_flag.setOnCheckedChangeListener((view, checked) ->
                 homeViewModel.toggleEnableMessageFlag());
-
-
-/*
-        homeViewModel.getStepLiveData().observe(getViewLifecycleOwner(),
-                newStep -> output_terminal.setText(String.valueOf(newStep)));
-*/
-
         return root;
     }
-
-
-/*    Button scanButton = root.findViewById(R.id.button_mode1);
-        scanButton.setOnClickListener(v -> {
-        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-            scanBluetoothDevices();
-        } else {
-            Toast.makeText(getContext(), "Please enable Bluetooth", Toast.LENGTH_SHORT).show();
-        }
-    });*/
-
+    
     @Override
     public void onDestroyView() {
         super.onDestroyView();

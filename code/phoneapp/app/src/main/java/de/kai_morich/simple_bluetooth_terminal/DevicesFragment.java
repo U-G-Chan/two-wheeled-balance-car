@@ -142,7 +142,7 @@ public class DevicesFragment extends ListFragment {
         Bundle args = new Bundle();
         args.putString("device", device.getAddress());
         Toast.makeText(getContext(), "列表项被点击，准备打开终端", Toast.LENGTH_SHORT).show();
-        //Fragment fragment = new TerminalFragment();
+        Fragment fragment = new TerminalFragment();
         //fragment.setArguments(args);
         //getParentFragmentManager().beginTransaction().replace(R.id.fragment, fragment, "terminal").addToBackStack(null).commit();
     }

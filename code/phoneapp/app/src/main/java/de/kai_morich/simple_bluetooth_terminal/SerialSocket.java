@@ -1,5 +1,6 @@
 package de.kai_morich.simple_bluetooth_terminal;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -41,14 +42,15 @@ class SerialSocket implements Runnable {
         };
     }
 
-    String getName() {
+    String getName() throws SecurityException{
         return device.getName() != null ? device.getName() : device.getAddress();
     }
 
     /**
      * connect-success and most connect-errors are returned asynchronously to listener
      */
-    void connect(SerialListener listener) throws IOException {
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    void connect(SerialListener listener)  {
         this.listener = listener;
         context.registerReceiver(disconnectBroadcastReceiver, new IntentFilter(Constants.INTENT_ACTION_DISCONNECT));
         Executors.newSingleThreadExecutor().submit(this);
@@ -83,7 +85,7 @@ class SerialSocket implements Runnable {
             socket.connect();
             if(listener != null)
                 listener.onSerialConnect();
-        } catch (Exception e) {
+        } catch ( SecurityException | IOException e) {
             if(listener != null)
                 listener.onSerialConnectError(e);
             try {

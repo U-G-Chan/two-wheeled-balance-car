@@ -39,9 +39,6 @@ public class DashboardFragment extends Fragment {
                 Objects.requireNonNull(actionBar).
                         setDisplayHomeAsUpEnabled(getChildFragmentManager().getBackStackEntryCount()>0);
         }
-
-
-
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
