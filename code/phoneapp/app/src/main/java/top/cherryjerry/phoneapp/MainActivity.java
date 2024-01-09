@@ -1,6 +1,7 @@
 package top.cherryjerry.phoneapp;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +12,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.Objects;
 
+import de.kai_morich.simple_bluetooth_terminal.DevicesFragment;
+import de.kai_morich.simple_bluetooth_terminal.SerialService;
 import top.cherryjerry.phoneapp.databinding.ActivityMainBinding;
 
 
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
 
         //BottomNavigationView navView = findViewById(R.id.nav_view);
-
+       this.startService(new Intent(this, SerialService.class));
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

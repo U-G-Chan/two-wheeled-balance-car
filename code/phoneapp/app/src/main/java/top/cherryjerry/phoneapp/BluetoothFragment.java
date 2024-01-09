@@ -46,8 +46,6 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
     private boolean pendingNewline = false;
     private final String newline = TextUtil.newline_crlf;
 
-    private HomeViewModel homeViewModel;
-
     private static BluetoothFragment instance;
 
 
@@ -62,36 +60,12 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         setHasOptionsMenu(true);
         assert getArguments() != null;
         deviceAddress = getArguments().getString("device");
     }
 
-    @Override
-    public void onDestroy() {
-        if (connected != Connected.False) {
-            disconnect();
-        }
-        getActivity().stopService(new Intent(getActivity(), SerialService.class));
-        super.onDestroy();
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(service != null) {
-            service.attach(this);
-        }else{
-            // prevents service destroy on unbind from recreated activity caused by orientation change
-            getActivity().startService(new Intent(getActivity(), SerialService.class));
-        }
-    }
-    @Override
-    public void onStop() {
-        if(service != null && !getActivity().isChangingConfigurations())
-            service.detach();
-        super.onStop();
-    }
+
     @SuppressWarnings("deprecation") // onAttach(context) was added with API 23.
     // onAttach(activity) works for all API versions
     @Override
@@ -105,14 +79,7 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
         try { getActivity().unbindService(this); } catch(Exception ignored) {}
         super.onDetach();
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(initialStart && service != null) {
-            initialStart = false;
-            getActivity().runOnUiThread(this::connect);
-        }
-    }
+
     @Override
     public void onServiceConnected(ComponentName name, IBinder binder) {
         service = ((SerialService.SerialBinder) binder).getService();
@@ -131,11 +98,6 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bt_success, container, false);
     }
-/*    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_terminal, menu);
-        menu.findItem(R.id.hex).setChecked(hexEnabled);
-    }*/
 
     /*
      * Serial + UI
@@ -155,6 +117,7 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
     private void disconnect() {
         connected = Connected.False;
         service.disconnect();
+        status("disconnected");
     }
 
 
@@ -213,7 +176,7 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
     }
 
     private void status(String str) {
-        homeViewModel.showMessage(str + '\n');
+        HomeViewModel.showMessage(str + '\n');
     }
 
     /*

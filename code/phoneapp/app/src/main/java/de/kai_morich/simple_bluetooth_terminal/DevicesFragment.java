@@ -145,7 +145,7 @@ public class DevicesFragment extends ListFragment {
         Fragment fragment = BluetoothFragment.getInstance();
         fragment.setArguments(args);
         getParentFragmentManager().beginTransaction().replace(
-                R.id.fragment, fragment, "bluetooth").addToBackStack(null).commit();
+                R.id.fragment, fragment, "bt_success").addToBackStack(null).commit();
         BluetoothFragment.connected = BluetoothFragment.Connected.True;
     }
 }

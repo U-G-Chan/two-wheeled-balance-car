@@ -31,11 +31,12 @@ public class DashboardFragment extends Fragment {
         if (activity != null) {
             ActionBar actionBar = activity.getSupportActionBar();//获取actionBar
 
-            if (savedInstanceState == null)
+            if (savedInstanceState == null) {
                 getChildFragmentManager().beginTransaction().add(R.id.fragment, new DevicesFragment(), "devices").commit();
-            else
+            } else {
                 Objects.requireNonNull(actionBar).
-                        setDisplayHomeAsUpEnabled(getChildFragmentManager().getBackStackEntryCount()>0);
+                        setDisplayHomeAsUpEnabled(getChildFragmentManager().getBackStackEntryCount() > 0);
+            }
         }
 
 
