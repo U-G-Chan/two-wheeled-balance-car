@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -39,7 +40,6 @@ public class DashboardFragment extends Fragment {
             }
         }
 
-
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,6 +52,8 @@ public class DashboardFragment extends Fragment {
 
         final Button button_BT_connect = root.findViewById(R.id.button_bt_connect);
         button_BT_connect.setOnClickListener(view -> dashboardViewModel.btConnectTest());
+
+        //final TextView textView = binding.;
 
         //final TextView textView = binding.textDashboard;
         //dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
