@@ -169,7 +169,6 @@ public class BluetoothFragment extends Fragment implements ServiceConnection, Se
         }
         //receiveText.append(spn);
         HomeViewModel.showMessage(spn.toString());
-
     }
 
     private void status(String str) {
