@@ -51,17 +51,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 初始化权限请求的回调
-        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                // 权限被授予，可以执行需要权限的操作
-                scanBluetoothDevices();
-            } else {
-                // 权限被拒绝，向用户解释为何需要此权限
-                Toast.makeText(getContext(), "Location permission is needed for Bluetooth scanning", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -124,37 +113,6 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    // 在Fragment中请求权限
-    private void checkPermissionsAndScan() {
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 已经获得权限，可以扫描
-            scanBluetoothDevices();
-        } else {
-            // 直接请求权限
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-    }
-
-    private void scanBluetoothDevices() {
-        // 检查权限
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // 权限未被授予
-            Log.d("BluetoothDevice", "Permission not granted for accessing location.");
-            return;
-        }
-        // 权限已被授予，继续执行操作
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                Log.d("BluetoothDevice", "Device: " + device.getName() + ", " + device.getAddress());
-            }
-        } else {
-            Log.d("BluetoothDevice", "No paired Bluetooth devices found.");
-        }
     }
 
 }
