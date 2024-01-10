@@ -27,17 +27,20 @@ public class NotificationsFragment extends Fragment {
         final TextView stateTextView = binding.textListenState;
         notificationsViewModel.getStateText().observe(getViewLifecycleOwner(), stateTextView::setText);
         final Button  button_listen_state =  root.findViewById(R.id.button_listen_state);
-        button_listen_state.setOnClickListener(view -> notificationsViewModel.stateTextTest());
+        button_listen_state.setOnClickListener(
+                view -> notificationsViewModel.toggleEnableListenState());
 
         final TextView diatanceTextView = binding.textListenDistance;
         notificationsViewModel.getDistanceText().observe(getViewLifecycleOwner(), diatanceTextView::setText);
         final Button  button_listen_distance =  root.findViewById(R.id.button_listen_distance);
-        button_listen_distance.setOnClickListener(view -> notificationsViewModel.distanceTextTest());
+        button_listen_distance.setOnClickListener(
+                view -> notificationsViewModel.toggleEnableListenDistance());
 
         final TextView settingTextView = binding.textUpdateSetting;
         notificationsViewModel.getSettingText().observe(getViewLifecycleOwner(), settingTextView::setText);
         final Button  button_update_setting =  root.findViewById(R.id.button_update_setting);
-        button_update_setting.setOnClickListener(view -> notificationsViewModel.settingTextTest());
+        button_update_setting.setOnClickListener(
+                view -> notificationsViewModel.toggleEnableListenSetting());
 
         return root;
     }

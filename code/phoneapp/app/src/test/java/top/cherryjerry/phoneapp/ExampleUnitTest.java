@@ -14,4 +14,14 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void MsgFrameUtilTest(){
+        String str1 = "fasfgjdogbndgn{{301,0,0.5}}fsdfdssdfdsee33";
+        String str2 = "hello";
+        String[] args = MsgFrameUtil.splitMsgFrame(str2);
+        for (String arg : args) {
+            System.out.println(arg+"======");
+        }
+    }
 }

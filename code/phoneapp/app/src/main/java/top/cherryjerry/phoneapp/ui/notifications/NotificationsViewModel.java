@@ -3,14 +3,25 @@ package top.cherryjerry.phoneapp.ui.notifications;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Locale;
+
+import top.cherryjerry.phoneapp.BluetoothFragment;
+import top.cherryjerry.phoneapp.MsgCode;
+
 public class NotificationsViewModel extends ViewModel {
 
 
-    private final MutableLiveData<String> stateText;
+    private static MutableLiveData<String> stateText;
 
-    private final MutableLiveData<String> distanceText;
+    private static MutableLiveData<String> distanceText;
 
-    private final MutableLiveData<String> settingText;
+    private static MutableLiveData<String> settingText;
+
+    private boolean enableListenState =false;
+    private boolean enableListenDistance =false;
+    private boolean enableListenSetting =false;
+
+
 
     public NotificationsViewModel() {
         stateText = new MutableLiveData<>();
@@ -33,16 +44,47 @@ public class NotificationsViewModel extends ViewModel {
         return settingText;
     }
 
-    public void stateTextTest(){
-        stateText.setValue("{This is new stateText}");
+
+    public static void updateStateText(float angleX, float angleY, float angleZ){
+        String strAngleX = String.format(Locale.CHINA,"%.2f",angleX);
+        String strAngleY = String.format(Locale.CHINA,"%.2f",angleY);
+        String strAngleZ = String.format(Locale.CHINA,"%.2f",angleZ);
+        stateText.setValue("angleX="+strAngleX+"\nangleY="+strAngleY+"\nangleZ="+strAngleZ);
     }
 
-    public void distanceTextTest(){
-        distanceText.setValue("{This is new distanceText}");
+    public static void updateDistanceText(float distance){
+        String strDistance = String.format(Locale.CHINA,"%.2f",distance);
+        stateText.setValue("obstacle distance="+strDistance);
     }
 
-    public void settingTextTest(){
-        settingText.setValue("{This is new settingText}");
+    public void toggleEnableListenState(){
+        if (BluetoothFragment.connected == BluetoothFragment.Connected.True) {
+            enableListenState = !enableListenState;
+            int flag = enableListenState?1:0;
+            BluetoothFragment.getInstance()
+                    .send("{{"+ MsgCode.SET_LISTEN_STATE.getCode()+
+                            ","+flag+"}}");
+        }
+    }
+
+    public void toggleEnableListenDistance(){
+        if (BluetoothFragment.connected == BluetoothFragment.Connected.True) {
+            enableListenDistance = !enableListenDistance;
+            int flag = enableListenDistance?1:0;
+            BluetoothFragment.getInstance()
+                    .send("{{"+ MsgCode.SET_LISTEN_DISTANCE.getCode()+
+                            ","+flag+"}}");
+        }
+    }
+
+    public void toggleEnableListenSetting(){
+        if (BluetoothFragment.connected == BluetoothFragment.Connected.True) {
+            enableListenSetting = !enableListenSetting;
+            int flag = enableListenSetting?1:0;
+            BluetoothFragment.getInstance()
+                    .send("{{"+ MsgCode.SET_LISTEN_SETTING.getCode()+
+                            ","+flag+"}}");
+        }
     }
 
 }
