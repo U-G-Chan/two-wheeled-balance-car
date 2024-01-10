@@ -13,7 +13,6 @@ public class DashboardViewModel extends ViewModel {
     public DashboardViewModel() {
     }
 
-
     public void btConnectTest(){
         if (BluetoothFragment.connected == BluetoothFragment.Connected.True) {
             BluetoothFragment.getInstance().send("hello from APP");

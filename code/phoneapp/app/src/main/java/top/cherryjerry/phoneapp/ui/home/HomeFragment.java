@@ -26,7 +26,6 @@ import top.cherryjerry.phoneapp.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private BluetoothAdapter bluetoothAdapter;
     private HomeViewModel homeViewModel;
 
     private final ActivityResultLauncher<Intent> enableBtResultLauncher = registerForActivityResult(
@@ -50,7 +49,7 @@ public class HomeFragment extends Fragment {
         super.onAttach(context);
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager != null) {
-            bluetoothAdapter = bluetoothManager.getAdapter();
+            BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
             if (bluetoothAdapter != null) {
                 System.out.println("get bluetoothAdapter");
             }else{
@@ -63,34 +62,36 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        if(homeViewModel == null){
+            homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        }
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        ScrollView scrollView = root.findViewById(R.id.scrollView);
+        homeViewModel.setScrollView(scrollView);
+
         final TextView output_terminal = root.findViewById(R.id.output_terminal);
         homeViewModel.getText().observe(getViewLifecycleOwner(),output_terminal::setText);
 
-        ScrollView scrollView = root.findViewById(R.id.scrollView);
-        homeViewModel.setScrollView(scrollView);
 
         //监听模式按键
         final Button button_mode1 = root.findViewById(R.id.button_mode1);
         final Button button_mode2 = root.findViewById(R.id.button_mode2);
         final Button button_mode3 = root.findViewById(R.id.button_mode3);
-        button_mode1.setOnClickListener(view -> homeViewModel.useMode1());
-        button_mode2.setOnClickListener(view -> homeViewModel.useMode2());
-        button_mode3.setOnClickListener(view -> homeViewModel.useMode3());
+        button_mode1.setOnClickListener(view -> homeViewModel.useMode(MsgCode.SET_MODE_CTRL));
+        button_mode2.setOnClickListener(view -> homeViewModel.useMode(MsgCode.SET_MODE_FREE));
+        button_mode3.setOnClickListener(view -> homeViewModel.useMode(MsgCode.SET_MODE_LINE));
         //监听方向按键
         final Button button_up = root.findViewById(R.id.button_up);
         final Button button_down = root.findViewById(R.id.button_down);
         final Button button_left = root.findViewById(R.id.button_left);
         final Button button_right = root.findViewById(R.id.button_right);
-        button_up.setOnClickListener(view -> homeViewModel.keyUP());
-        button_down.setOnClickListener(view -> homeViewModel.keyDown());
-        button_left.setOnClickListener(view -> homeViewModel.keyLeft());
-        button_right.setOnClickListener(view -> homeViewModel.keyRight());
+        button_up.setOnClickListener(view -> homeViewModel.addSpeed(MsgCode.KEY_UP));
+        button_down.setOnClickListener(view -> homeViewModel.addSpeed(MsgCode.KEY_DOWN));
+        button_left.setOnClickListener(view -> homeViewModel.addSpeed(MsgCode.KEY_LEFT));
+        button_right.setOnClickListener(view -> homeViewModel.addSpeed(MsgCode.KEY_RIGHT));
         //监听信息输出控制键
         final Button button_clear = root.findViewById(R.id.button_clear);
         button_clear.setOnClickListener(view -> homeViewModel.cleanMessage());
