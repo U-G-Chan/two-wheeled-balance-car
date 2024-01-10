@@ -25,19 +25,19 @@
     <string name="button_update">更新</string>
 
     <string name="text_title_stand">直立环参数</string>
-    <string name="text_input_stand_Kp">Kp</string>
-    <string name="text_input_stand_Ki">Ki</string>
-    <string name="text_input_stand_Kd">Kd</string>
+    <string name="text_input_stand_Kp">stand_Kp</string>
+    <string name="text_input_stand_Ki">stand_Ki</string>
+    <string name="text_input_stand_Kd">stand_Kd</string>
 
     <string name="text_title_velocity">速度环参数</string>
-    <string name="text_input_velocity_Kp">Kp</string>
-    <string name="text_input_velocity_Ki">Ki</string>
-    <string name="text_input_velocity_Kd">Kd</string>
+    <string name="text_input_velocity_Kp">velocity_Kp</string>
+    <string name="text_input_velocity_Ki">velocity_Ki</string>
+    <string name="text_input_velocity_Kd">velocity_Kd</string>
 
     <string name="text_title_turn">转向环参数</string>
-    <string name="text_input_turn_Kp">Kp</string>
-    <string name="text_input_turn_Ki">Ki</string>
-    <string name="text_input_turn_Kd">Kd</string>
+    <string name="text_input_turn_Kp">turn_Kp</string>
+    <string name="text_input_turn_Ki">turn_Ki</string>
+    <string name="text_input_turn_Kd">turn_Kd</string>
 
     <string name="button_listen_state">监听姿态</string>
     <string name="button_listen_distance">监听测距</string>

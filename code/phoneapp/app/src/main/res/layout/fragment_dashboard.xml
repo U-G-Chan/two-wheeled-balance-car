@@ -40,7 +40,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                     tools:ignore="SpUsage,TextSizeCheck" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_stand_Kp"
+                    android:id="@+id/text_input_layout_stand_Kp"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -86,11 +86,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_stand_Kp"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_stand_Ki"
+                    android:id="@+id/text_input_layout_stand_Ki"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -102,11 +103,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_stand_Ki"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_stand_Kd"
+                    android:id="@+id/text_input_layout_stand_Kd"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -118,6 +120,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_stand_Kd"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -155,7 +158,7 @@
                     tools:ignore="SpUsage,TextSizeCheck" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_velocity_Kp"
+                    android:id="@+id/text_input_layout_velocity_Kp"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -167,11 +170,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_velocity_Kp"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_velocity_Ki"
+                    android:id="@+id/text_input_layout_velocity_Ki"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -183,11 +187,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_velocity_Ki"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_velocity_Kd"
+                    android:id="@+id/text_input_layout_velocity_Kd"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -199,6 +204,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_velocity_Kd"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -236,7 +242,7 @@
                     tools:ignore="SpUsage,TextSizeCheck" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_turn_Kp"
+                    android:id="@+id/text_input_layout_turn_Kp"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -248,11 +254,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_turn_Kp"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_turn_Ki"
+                    android:id="@+id/text_input_layout_turn_Ki"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -264,11 +271,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_turn_Ki"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_input_turn_Kd"
+                    android:id="@+id/text_input_layout_turn_Kd"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginStart="0dp"
@@ -280,6 +288,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/edit_turn_Kd"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -288,10 +297,5 @@
 
 
     </ScrollView>
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
