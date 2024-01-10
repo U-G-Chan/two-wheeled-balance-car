@@ -39,5 +39,10 @@
     <string name="text_input_turn_Ki">Ki</string>
     <string name="text_input_turn_Kd">Kd</string>
 
+    <string name="button_listen_state">监听姿态</string>
+    <string name="button_listen_distance">监听测距</string>
+    <string name="button_update_setting">刷新参数</string>
+
+
 </resources>
 

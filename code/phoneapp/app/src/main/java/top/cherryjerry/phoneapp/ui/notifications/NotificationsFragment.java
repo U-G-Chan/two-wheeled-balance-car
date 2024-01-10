@@ -24,8 +24,13 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView stateTextView = binding.textListenState;
+        notificationsViewModel.getStateText().observe(getViewLifecycleOwner(), stateTextView::setText);
+        final TextView diatanceTextView = binding.textListenDistance;
+        notificationsViewModel.getDistanceText().observe(getViewLifecycleOwner(), diatanceTextView::setText);
+        final TextView settingTextView = binding.textUpdateSetting;
+        notificationsViewModel.getSettingText().observe(getViewLifecycleOwner(), settingTextView::setText);
+
         return root;
     }
 
