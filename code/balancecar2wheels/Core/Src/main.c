@@ -28,12 +28,13 @@
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include "IIC.h"
-
 #include "car_mpu6050.h"
 
 #include "motor.h"
 #include "motor_encoder.h"
 #include "control.h"
+
+#include "bluetooth.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,6 +59,8 @@ int MOTOR_ENCODER_A,MOTOR_ENCODER_B;
 int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
 
 uint8_t mpu_init_flag = -1;
+
+uint8_t rx_data = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -111,6 +114,8 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim2);
 	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1 | TIM_CHANNEL_2); 
 	HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_1 | TIM_CHANNEL_2);
+	
+	HAL_UART_Receive_IT(&HUART_BLUETOOTH, &rx_data, 1);
 
 	motor_init();
 	mpu_init_flag = mpu6050_init();
@@ -132,7 +137,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		
 		HAL_Delay(100);
 		
   }
@@ -180,18 +184,22 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM1) {
-		if(mpu_init_flag == HAL_OK){
-			
+		if(mpu_init_flag == HAL_OK){		
 			control_pwm();
 		}
   }      
 }
 
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-//  if (GPIO_Pin == GPIO_PIN_15) {
-//		
-//  }
-//}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)  {
+	
+	 if (huart->Instance == USART2)  // 当前接收中断UART2
+    {
+			//printf("%c\r\n",rx_data);
+			bluetooth_fm_buf_it(&rx_data);
+			
+    }
+}
+
 
 /* USER CODE END 4 */
 
