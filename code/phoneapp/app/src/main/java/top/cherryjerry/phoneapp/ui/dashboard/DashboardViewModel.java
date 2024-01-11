@@ -10,12 +10,15 @@ public class DashboardViewModel extends ViewModel {
 
     private static final String str_zero = "0";
 
+    private boolean flag = true;
+
     public DashboardViewModel() {
     }
 
     public void btConnectTest(){
         if (BluetoothFragment.connected == BluetoothFragment.Connected.True) {
-            BluetoothFragment.getInstance().send("hello from APP");
+            BluetoothFragment.getInstance().send("{{121,"+(flag?1:0)+"}}");
+            flag = !flag;
         }
     }
 

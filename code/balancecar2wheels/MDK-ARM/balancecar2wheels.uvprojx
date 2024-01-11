@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\MOD\MPU6050;..\MOD\MOTOR</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\MOD\MPU6050;..\MOD\MOTOR;..\MOD\BLUETOOTH</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -528,6 +528,31 @@
               <FileName>car_mpu6050.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\MOD\MPU6050\car_mpu6050.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/MOD/BLUETOOTH</GroupName>
+          <Files>
+            <File>
+              <FileName>bluetooth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\BLUETOOTH\bluetooth.c</FilePath>
+            </File>
+            <File>
+              <FileName>bluetooth_msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MOD\BLUETOOTH\bluetooth_msg.c</FilePath>
+            </File>
+            <File>
+              <FileName>bluetooth.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\BLUETOOTH\bluetooth.h</FilePath>
+            </File>
+            <File>
+              <FileName>bluetooth_msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\MOD\BLUETOOTH\bluetooth_msg.h</FilePath>
             </File>
           </Files>
         </Group>
